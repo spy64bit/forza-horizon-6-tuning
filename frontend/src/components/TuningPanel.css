@@ -1,0 +1,230 @@
+/* Car Tuning panel (TuningPanel.vue) */
+.tune-modal {
+    width: 1000px;
+    max-width: calc(100vw - 48px);
+    max-height: calc(100vh - 48px);
+    padding: 0;
+    overflow: hidden;
+}
+
+.tune-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #2a3a50;
+}
+
+.tune-header h2 {
+    margin-bottom: 0;
+}
+
+.tune-body {
+    display: flex;
+    gap: 0;
+    max-height: calc(100vh - 130px);
+    min-height: 420px;
+}
+
+.tune-list {
+    width: 260px;
+    flex-shrink: 0;
+    border-right: 1px solid #2a3a50;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+/* Sidebar search — self-contained, no inheritance from modal-input */
+.tune-search {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    flex: none;
+    width: 100%;
+    box-sizing: border-box;
+    height: 32px;
+    min-height: 0;
+    max-height: 32px;
+    padding: 0 10px;
+    background: #1a2030;
+    border: 1px solid #2a3a50;
+    border-radius: 6px;
+    color: #e0e6f0;
+    font-size: 13px;
+    line-height: 32px;
+    outline: none;
+}
+
+.tune-search:focus {
+    border-color: #4a90d9;
+}
+
+.tune-search::placeholder {
+    color: #445566;
+}
+
+.tune-list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #6677aa;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.tune-list-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn.sm {
+    padding: 4px 8px;
+    font-size: 11px;
+}
+
+.tune-list ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tune-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #1a2030;
+    transition: background 0.12s;
+}
+
+.tune-list li:hover {
+    background: #20283a;
+}
+
+.tune-list li.active {
+    background: #1d3050;
+    outline: 1px solid #4a90d9;
+}
+
+.tune-list li.empty {
+    cursor: default;
+    background: transparent;
+    color: #6677aa;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.tune-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-icon.del {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+    background: transparent;
+}
+
+.btn-icon.del:hover {
+    background: #3d1515;
+}
+
+.tune-editor {
+    flex: 1;
+    min-width: 0;
+    padding: 18px 22px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tune-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.tune-meta label {
+    font-size: 11px;
+    color: #6677aa;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+.tune-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.tune-group h3 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8fb3e0;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 10px;
+}
+
+.tune-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.tune-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+}
+
+.tune-field-label {
+    font-size: 11px;
+    color: #8899aa;
+}
+
+.tune-field input {
+    background: #1a2030;
+    border: 1px solid #2a3a50;
+    color: #e0e6f0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    outline: none;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tune-field input:focus {
+    border-color: #4a90d9;
+}
+
+.tune-field input.invalid {
+    border-color: #d94040;
+}
+
+.tune-field-err {
+    font-size: 10px;
+    color: #ff6060;
+}
+
+.tune-actions {
+    position: sticky;
+    bottom: 0;
+    background: #131922;
+    padding-top: 8px;
+}

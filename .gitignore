@@ -1,0 +1,15 @@
+# Wails / Go build output
+build/bin
+*.exe
+
+# Go
+*.test
+*.out
+
+# Node / frontend
+node_modules
+frontend/dist
+
+# OS / editor
+.DS_Store
+Thumbs.db
