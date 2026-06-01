@@ -81,9 +81,11 @@ async function save() {
   }
   const res = await SaveTune(buildPayload())
   if (typeof res === 'string') { error.value = res; return }
+  const wasUpdate = form.id !== 0
   form.id = res.id
   await refresh()
   emit('changed')
+  showToast(wasUpdate ? 'Update successful' : 'Saved successfully')
 }
 
 async function remove(t) {
@@ -131,6 +133,16 @@ function close() {
 }
 
 const filteredCount = computed(() => tunes.value.length)
+
+const activeTab = ref(0)
+
+const toast = ref('')
+let toastTimer = null
+function showToast(msg) {
+  toast.value = msg
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { toast.value = '' }, 2500)
+}
 
 onMounted(refresh)
 </script>
@@ -183,24 +195,40 @@ onMounted(refresh)
             <input v-model="form.notes" class="modal-input" placeholder="Optional notes" />
           </div>
 
-          <div class="tune-groups">
-            <div v-for="g in groups" :key="g.title" class="tune-group">
-              <h3>{{ g.title }}</h3>
-              <div class="tune-fields">
-                <label v-for="field in g.fields" :key="field.key" class="tune-field">
+          <div class="tune-tabs-bar">
+            <button
+              v-for="(g, i) in groups"
+              :key="g.title"
+              class="tune-tab"
+              :class="{ active: activeTab === i }"
+              @click="activeTab = i"
+            >{{ g.title }}</button>
+          </div>
+
+          <div class="tune-tab-panel">
+            <div class="tune-fields">
+              <label v-for="field in groups[activeTab].fields" :key="field.key" class="tune-field">
+                <div class="tune-field-header">
                   <span class="tune-field-label">{{ field.label }}</span>
-                  <input
-                    v-model="form[field.key]"
-                    type="number"
-                    :step="field.step"
-                    :min="field.min"
-                    :max="field.max"
-                    :placeholder="`${field.min}–${field.max}`"
-                    :class="{ invalid: fieldErrors[field.key] }"
-                  />
-                  <span v-if="fieldErrors[field.key]" class="tune-field-err">{{ fieldErrors[field.key] }}</span>
-                </label>
-              </div>
+                  <span class="tune-slider-val" :class="{ empty: form[field.key] === '' || form[field.key] == null }">
+                    {{ form[field.key] === '' || form[field.key] == null ? '—' : form[field.key] }}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  :min="field.min"
+                  :max="field.max"
+                  :step="field.step"
+                  :value="form[field.key] === '' || form[field.key] == null ? field.min : form[field.key]"
+                  @input="form[field.key] = $event.target.value"
+                  :class="{ invalid: fieldErrors[field.key] }"
+                />
+                <div class="tune-slider-range">
+                  <span>{{ field.min }}</span>
+                  <span>{{ field.max }}</span>
+                </div>
+                <span v-if="fieldErrors[field.key]" class="tune-field-err">{{ fieldErrors[field.key] }}</span>
+              </label>
             </div>
           </div>
 
@@ -213,6 +241,10 @@ onMounted(refresh)
         </section>
       </div>
     </div>
+
+    <Transition name="tune-toast">
+      <div v-if="toast" class="tune-toast">{{ toast }}</div>
+    </Transition>
   </div>
 </template>
 

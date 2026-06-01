@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   points: { type: Array, required: true }, // [{ x, z }]
@@ -12,6 +12,11 @@ let dirty = false
 let rafId = null
 
 function markDirty() { dirty = true }
+
+// Redraw whenever the car position changes (curX/curZ update every packet but
+// the parent only calls markDirty() when a new route point is actually pushed,
+// so the position dot would otherwise freeze between route-point additions).
+watch(() => props.curX, markDirty)
 
 function loop() {
   if (dirty) {

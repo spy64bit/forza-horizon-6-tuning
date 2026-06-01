@@ -53,25 +53,20 @@ export const groups = [
         title: 'Ride Height (cm)',
         fields: [
             { key: 'rideHeightFront', label: 'Front', min: 6, max: 11, step: 0.1 },
-            { key: 'rideHeightRear', label: 'Rear', min: 10.5, max: 15.5, step: 0.1 },
+            { key: 'rideHeightRear', label: 'Rear', min: 7.8, max: 15.5, step: 0.1 },
         ],
     },
     {
-        title: 'Damping — Rebound Stiffness',
+        title: 'Damping',
         fields: [
-            { key: 'reboundFront', label: 'Front', min: 1, max: 20, step: 0.1 },
-            { key: 'reboundRear', label: 'Rear', min: 1, max: 20, step: 0.1 },
+            { key: 'reboundFront', label: 'Rebound Front', min: 1, max: 20, step: 0.1 },
+            { key: 'reboundRear', label: 'Rebound Rear', min: 1, max: 20, step: 0.1 },
+            { key: 'bumpFront', label: 'Bump Front', min: 1, max: 20, step: 0.1 },
+            { key: 'bumpRear', label: 'Bump Rear', min: 1, max: 20, step: 0.1 },
         ],
     },
     {
-        title: 'Damping — Bump Stiffness',
-        fields: [
-            { key: 'bumpFront', label: 'Front', min: 1, max: 20, step: 0.1 },
-            { key: 'bumpRear', label: 'Rear', min: 1, max: 20, step: 0.1 },
-        ],
-    },
-    {
-        title: 'Aero — Downforce (kgf)',
+        title: 'Aero',
         fields: [
             { key: 'downforceFront', label: 'Front', min: 105, max: 315, step: 1 },
             { key: 'downforceRear', label: 'Rear', min: 117, max: 507, step: 1 },

@@ -8,7 +8,7 @@ body {
     background: #0e1117;
     color: #e0e6f0;
     font-family: 'Inter', system-ui, sans-serif;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .app {
@@ -52,7 +52,7 @@ h1 {
     border: 1px solid #2a3a50;
     border-radius: 12px;
     padding: 24px;
-    width: 420px;
+    /* width: 420px; */
     max-width: calc(100vw - 48px);
     display: flex;
     flex-direction: column;
@@ -112,7 +112,7 @@ h1 {
 
 .row label {
     min-width: 34px;
-    color: #8899aa;
+    color: #aabbcc;
 }
 
 input[type="text"],
@@ -140,7 +140,7 @@ input:disabled {
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     transition: opacity 0.15s;
 }
 
@@ -173,7 +173,7 @@ input:disabled {
     display: flex;
     align-items: center;
     gap: 6px;
-    color: #8899aa;
+    color: #aabbcc;
 }
 
 .tooltip {
@@ -289,26 +289,26 @@ input:disabled {
 }
 
 .stat label {
-    font-size: 11px;
-    color: #6677aa;
+    font-size: 12px;
+    color: #8caac8;
     text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 
 .stat span {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
-    color: #e8f0ff;
+    color: #f0f6ff;
 }
 
 .stat.big span {
-    font-size: 34px;
+    font-size: 38px;
 }
 
 .stat span em {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400;
-    color: #6677aa;
+    color: #8caac8;
     font-style: normal;
 }
 
@@ -338,7 +338,7 @@ input:disabled {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4px 16px;
-    font-size: 14px !important;
+    font-size: 16px !important;
     font-weight: 600;
 }
 
