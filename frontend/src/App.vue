@@ -215,81 +215,85 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="app">
-    <div class="app-header">
-      <h1>Forza Horizon 6 Telemetry</h1>
-      <div class="header-actions">
-        <button class="btn-icon tooltip" @click="showTuning = true">
+  <div class="max-w-[1400px] mx-auto px-8 py-7">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-3 mb-5">
+      <h1 class="text-xl font-bold text-white tracking-wide">Forza Horizon 6 Telemetry</h1>
+      <div class="flex items-center gap-2">
+        <button class="relative group bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50]" @click="showTuning = true">
           🔧
-          <span class="tooltip-text">Car Tuning</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap pointer-events-none z-10">Car Tuning</span>
         </button>
-        <button class="btn-icon tooltip" @click="openSettings">
+        <button class="relative group bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50]" @click="openSettings">
           ⚙️
-          <span class="tooltip-text">Settings</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap pointer-events-none z-10">Settings</span>
         </button>
       </div>
     </div>
 
-    <div class="controls">
-      <div class="row">
-        <label>File</label>
+    <!-- Controls -->
+    <div class="mb-6">
+      <!-- File row -->
+      <div class="flex items-center gap-2.5 mb-2.5">
+        <label class="min-w-[34px] text-[#aabbcc]">File</label>
         <SessionCombobox v-model="filename" :sessions="sessions" :disabled="mode !== 'live' || renaming" />
-        <button class="btn-icon tooltip" @click="startRename" :disabled="mode !== 'live' || !filename || renaming">
+        <button class="relative group bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50] disabled:opacity-50 disabled:cursor-not-allowed" @click="startRename" :disabled="mode !== 'live' || !filename || renaming">
           ✏️
-          <span class="tooltip-text">Rename</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap pointer-events-none z-10">Rename</span>
         </button>
-        <!-- Refresh button: only needed when a .bin file is manually dropped into the sessions folder from outside the app
-        <button class="btn-icon tooltip" @click="refreshSessions" :disabled="mode !== 'live'">
-          ↻
-          <span class="tooltip-text">Refresh list</span>
-        </button>
-        -->
-        <button class="btn-icon tooltip" @click="OpenSessionsDir">
+        <button class="relative group bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50]" @click="OpenSessionsDir">
           📂
-          <span class="tooltip-text">Show in folder</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap pointer-events-none z-10">Show in folder</span>
         </button>
       </div>
-      <div v-if="renaming" class="row rename-row">
-        <label>→</label>
-        <input v-model="renameValue" class="rename-input" @keyup.enter="confirmRename" @keyup.escape="renaming = false" autofocus />
-        <button class="btn btn-save" @click="confirmRename">✓ Save</button>
-        <button class="btn btn-cancel" @click="renaming = false">✗ Cancel</button>
+
+      <!-- Rename row -->
+      <div v-if="renaming" class="flex items-center gap-2.5 mb-2.5 -mt-1">
+        <label class="min-w-[34px] text-[#aabbcc]">→</label>
+        <input v-model="renameValue" class="bg-[#1a2030] border border-[#4a90d9] text-[#e0e6f0] px-2.5 py-1.5 rounded-md flex-1 outline-none text-[13px] focus:border-[#60aaff]" @keyup.enter="confirmRename" @keyup.escape="renaming = false" autofocus />
+        <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#2a7ae2] text-white hover:bg-[#3a8af2] transition-colors" @click="confirmRename">✓ Save</button>
+        <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#333d4d] text-[#aabbcc] hover:bg-[#3d4d60] transition-colors" @click="renaming = false">✗ Cancel</button>
       </div>
-      <div class="row">
-        <button @click="startRecord" :disabled="mode !== 'live'" class="btn record">
-          ● Record
-        </button>
-        <button @click="startReplay" :disabled="mode !== 'live'" class="btn replay">
-          ▶ Replay
-        </button>
-        <label class="check tooltip">
+
+      <!-- Record / Replay / Stop row -->
+      <div class="flex items-center gap-2.5 mb-2.5">
+        <button @click="startRecord" :disabled="mode !== 'live'" class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm transition-opacity disabled:opacity-[0.35] disabled:cursor-not-allowed bg-[#d94040] text-white">● Record</button>
+        <button @click="startReplay" :disabled="mode !== 'live'" class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm transition-opacity disabled:opacity-[0.35] disabled:cursor-not-allowed bg-[#2a7ae2] text-white">▶ Replay</button>
+        <label class="relative group flex items-center gap-1.5 text-[#aabbcc] cursor-pointer">
           <input type="checkbox" v-model="realtimeReplay" :disabled="mode !== 'live'" />
           Realtime
-          <span class="tooltip-text">Without Realtime, replay runs at full speed and may spike CPU usage.</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs pointer-events-none z-10 w-[260px] text-center leading-snug">Without Realtime, replay runs at full speed and may spike CPU usage.</span>
         </label>
-        <button @click="stopSession" :disabled="mode === 'live'" class="btn stop">
-          ■ Stop
-        </button>
+        <button @click="stopSession" :disabled="mode === 'live'" class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm transition-opacity disabled:opacity-[0.35] disabled:cursor-not-allowed bg-[#555] text-white">■ Stop</button>
       </div>
-      <div class="status" :class="mode">{{ mode.toUpperCase() }}</div>
-      <div v-if="errorMsg" class="error">{{ errorMsg }}</div>
 
-      <div class="row tune-select-row">
-        <label>Tune</label>
+      <!-- Mode badge -->
+      <div class="inline-block px-3 py-0.5 rounded-full text-[11px] font-bold tracking-widest mt-1"
+           :class="{
+             'bg-[#0d2e1a] text-[#44dd88]': mode === 'live',
+             'bg-[#3d1515] text-[#ff6060]': mode === 'recording',
+             'bg-[#0d2040] text-[#60aaff]': mode === 'replaying',
+           }">{{ mode.toUpperCase() }}</div>
+      <div v-if="errorMsg" class="text-[#ff6060] text-[13px] mt-2">{{ errorMsg }}</div>
+
+      <!-- Tune selector row -->
+      <div class="flex items-center gap-2.5 mt-2.5 mb-2.5">
+        <label class="min-w-[34px] text-[#aabbcc]">Tune</label>
         <TuneSelect v-model="selectedTuneId" :tunes="tunes" />
-        <button class="btn-icon tooltip" @click="showTuning = true">
+        <button class="relative group bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50]" @click="showTuning = true">
           🔧
-          <span class="tooltip-text">Manage tunes</span>
+          <span class="hidden group-hover:block absolute bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2 bg-[#1a2030] text-[#c0cce0] border border-[#2a3a50] rounded-md px-2.5 py-1.5 text-xs whitespace-nowrap pointer-events-none z-10">Manage tunes</span>
         </button>
       </div>
 
-      <!-- Playback bar — visible only during replay -->
-      <div v-if="mode === 'replaying'" class="playback-bar">
-        <button class="btn-icon" @click="togglePlayPause" :title="replayPaused ? 'Resume' : 'Pause'">
+      <!-- Playback bar -->
+      <div v-if="mode === 'replaying'" class="flex items-center gap-2.5 mt-2.5 bg-[#131922] rounded-lg px-3 py-2">
+        <button class="bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center flex-shrink-0 transition-colors hover:bg-[#2a3a50]" @click="togglePlayPause" :title="replayPaused ? 'Resume' : 'Pause'">
           {{ replayPaused ? '▶' : '⏸' }}
         </button>
         <input
-          class="scrubber"
+          class="scrubber flex-1"
           type="range"
           min="0"
           :max="replayTotal > 0 ? replayTotal - 1 : 0"
@@ -298,132 +302,144 @@ onUnmounted(() => {
           @input="onScrubberInput"
           @pointerup="onScrubberPointerUp"
         />
-        <span class="playback-counter">{{ replayFrame + 1 }} / {{ replayTotal }}</span>
+        <span class="text-[11px] text-[#6677aa] whitespace-nowrap min-w-[72px] text-right">{{ replayFrame + 1 }} / {{ replayTotal }}</span>
       </div>
     </div>
 
-    <div v-if="telemetry" class="telemetry-layout">
+    <!-- Telemetry layout -->
+    <div v-if="telemetry" class="flex gap-5 items-start">
       <RouteMap ref="routeMap" :points="routePoints" :cur-x="telemetry.posX" :cur-z="telemetry.posZ" />
-      <div class="telemetry">
-      <div class="race-badge" :class="telemetry.isRaceOn ? 'on' : 'off'">
-        {{ telemetry.isRaceOn ? '🟢 Race ON' : '🔴 Race OFF' }}
-      </div>
 
-      <div v-if="selectedTune" class="section tune-readout">
-        <div class="tune-readout-head">
-          <span class="tune-readout-title">🔧 {{ selectedTune.name || '(unnamed)' }}</span>
-          <span v-if="selectedTune.notes" class="tune-readout-notes">{{ selectedTune.notes }}</span>
+      <div class="flex flex-col gap-4 flex-1 min-w-0">
+
+        <!-- Race badge -->
+        <div class="self-start px-3.5 py-1 rounded-full text-xs font-bold tracking-[0.5px]"
+             :class="telemetry.isRaceOn ? 'bg-[#0d2e1a] text-[#44dd77]' : 'bg-[#2e1010] text-[#dd4444]'">
+          {{ telemetry.isRaceOn ? '🟢 Race ON' : '🔴 Race OFF' }}
         </div>
-        <div class="tune-readout-groups">
-          <div v-for="g in selectedTuneGroups" :key="g.title" class="tune-readout-group">
-            <h4>{{ g.title }}</h4>
-            <div class="tune-readout-fields">
-              <div v-for="f in g.fields" :key="f.key" class="tune-readout-field">
-                <span>{{ f.label }}</span>
-                <strong>{{ selectedTune[f.key] }}</strong>
+
+        <!-- Tune readout -->
+        <div v-if="selectedTune" class="flex flex-col gap-3.5 bg-[#131922] rounded-xl px-5 py-[18px]">
+          <div class="flex items-baseline gap-3 flex-wrap">
+            <span class="text-[15px] font-bold text-[#8fb3e0]">🔧 {{ selectedTune.name || '(unnamed)' }}</span>
+            <span v-if="selectedTune.notes" class="text-xs text-[#6677aa]">{{ selectedTune.notes }}</span>
+          </div>
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3.5 w-full">
+            <div v-for="g in selectedTuneGroups" :key="g.title">
+              <h4 class="text-[11px] font-bold text-[#6677aa] uppercase tracking-[0.6px] mb-1.5">{{ g.title }}</h4>
+              <div class="flex flex-col gap-[3px]">
+                <div v-for="f in g.fields" :key="f.key" class="flex items-baseline justify-between gap-2.5 text-[13px] py-0.5 border-b border-[#1c2533]">
+                  <span class="text-[#8899aa]">{{ f.label }}</span>
+                  <strong class="text-[#e0e6f0] tabular-nums">{{ selectedTune[f.key] }}</strong>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="stat big">
-          <label>Speed</label>
-          <span>{{ fmt1(telemetry.speed) }} <em>km/h</em></span>
-        </div>
-        <div class="stat big">
-          <label>RPM</label>
-          <span>{{ fmtInt(telemetry.rpm) }} <em>/ {{ fmtInt(telemetry.maxRpm) }}</em></span>
-        </div>
-        <div class="stat big">
-          <label>Gear</label>
-          <span>{{ fmtGear(telemetry.gear) }}</span>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="stat">
-          <label>Throttle</label>
-          <div class="bar-wrap">
-            <div class="bar throttle" :style="{ width: telemetry.throttle + '%' }"></div>
+        <!-- Speed / RPM / Gear -->
+        <div class="flex flex-wrap gap-4 bg-[#131922] rounded-xl px-5 py-[18px]">
+          <div class="flex flex-col gap-1 min-w-[150px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Speed</label>
+            <span class="text-[38px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.speed) }} <em class="text-sm font-normal text-[#8caac8] not-italic">km/h</em></span>
           </div>
-          <span>{{ fmt1(telemetry.throttle) }}%</span>
-        </div>
-        <div class="stat">
-          <label>Brake</label>
-          <div class="bar-wrap">
-            <div class="bar brake" :style="{ width: telemetry.brake + '%' }"></div>
+          <div class="flex flex-col gap-1 min-w-[150px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">RPM</label>
+            <span class="text-[38px] font-bold text-[#f0f6ff]">{{ fmtInt(telemetry.rpm) }} <em class="text-sm font-normal text-[#8caac8] not-italic">/ {{ fmtInt(telemetry.maxRpm) }}</em></span>
           </div>
-          <span>{{ fmt1(telemetry.brake) }}%</span>
+          <div class="flex flex-col gap-1 min-w-[150px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Gear</label>
+            <span class="text-[38px] font-bold text-[#f0f6ff]">{{ fmtGear(telemetry.gear) }}</span>
+          </div>
         </div>
-        <div class="stat">
-          <label>Boost</label>
-          <span>{{ fmt1(telemetry.boost) }}</span>
-        </div>
-        <div class="stat">
-          <label>Fuel</label>
-          <span>{{ fmt1(telemetry.fuel * 100) }}%</span>
-        </div>
-      </div>
 
-      <div class="section">
-        <div class="stat">
-          <label>Tire °C</label>
-          <span class="tires">
-            <span>FL {{ fmt1(telemetry.tireTempFL) }}</span>
-            <span>FR {{ fmt1(telemetry.tireTempFR) }}</span>
-            <span>RL {{ fmt1(telemetry.tireTempRL) }}</span>
-            <span>RR {{ fmt1(telemetry.tireTempRR) }}</span>
-          </span>
+        <!-- Throttle / Brake / Boost / Fuel -->
+        <div class="flex flex-wrap gap-4 bg-[#131922] rounded-xl px-5 py-[18px]">
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Throttle</label>
+            <div class="h-1.5 bg-[#1e2a3a] rounded overflow-hidden w-full">
+              <div class="h-full rounded bg-[#44cc66] transition-[width] duration-100" :style="{ width: telemetry.throttle + '%' }"></div>
+            </div>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.throttle) }}%</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Brake</label>
+            <div class="h-1.5 bg-[#1e2a3a] rounded overflow-hidden w-full">
+              <div class="h-full rounded bg-[#dd4444] transition-[width] duration-100" :style="{ width: telemetry.brake + '%' }"></div>
+            </div>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.brake) }}%</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Boost</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.boost) }}</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Fuel</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.fuel * 100) }}%</span>
+          </div>
         </div>
-      </div>
 
-      <div class="section">
-        <div class="stat">
-          <label>Lap</label>
-          <span>{{ telemetry.lapNumber }}</span>
+        <!-- Tire temps -->
+        <div class="flex flex-wrap gap-4 bg-[#131922] rounded-xl px-5 py-[18px]">
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Tire °C</label>
+            <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-base font-semibold text-[#f0f6ff]">
+              <span>FL {{ fmt1(telemetry.tireTempFL) }}</span>
+              <span>FR {{ fmt1(telemetry.tireTempFR) }}</span>
+              <span>RL {{ fmt1(telemetry.tireTempRL) }}</span>
+              <span>RR {{ fmt1(telemetry.tireTempRR) }}</span>
+            </div>
+          </div>
         </div>
-        <div class="stat">
-          <label>Position</label>
-          <span>{{ telemetry.racePosition }}</span>
+
+        <!-- Lap times -->
+        <div class="flex flex-wrap gap-4 bg-[#131922] rounded-xl px-5 py-[18px]">
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Lap</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ telemetry.lapNumber }}</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Position</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ telemetry.racePosition }}</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Current Lap</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.currentLapTime) }}s</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Best Lap</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.bestLap) }}s</span>
+          </div>
+          <div class="flex flex-col gap-1 min-w-[110px] flex-1">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.8px]">Last Lap</label>
+            <span class="text-[28px] font-bold text-[#f0f6ff]">{{ fmt1(telemetry.lastLap) }}s</span>
+          </div>
         </div>
-        <div class="stat">
-          <label>Current Lap</label>
-          <span>{{ fmt1(telemetry.currentLapTime) }}s</span>
-        </div>
-        <div class="stat">
-          <label>Best Lap</label>
-          <span>{{ fmt1(telemetry.bestLap) }}s</span>
-        </div>
-        <div class="stat">
-          <label>Last Lap</label>
-          <span>{{ fmt1(telemetry.lastLap) }}s</span>
-        </div>
-      </div>
+
       </div>
     </div>
 
-    <div v-else class="placeholder">
+    <div v-else class="text-center text-[#445566] mt-16 text-[15px]">
       Waiting for telemetry from Forza...
     </div>
 
-    <div v-if="showSettings" class="modal-overlay" @click.self="showSettings = false">
-      <div class="modal">
-        <h2>Settings</h2>
-        <label class="modal-label">UDP Listen Address</label>
+    <!-- Settings modal -->
+    <div v-if="showSettings" class="fixed inset-0 bg-[rgba(4,8,16,0.7)] flex items-center justify-center z-[100]" @click.self="showSettings = false">
+      <div class="bg-[#131922] border border-[#2a3a50] rounded-xl p-6 w-[420px] max-w-[calc(100vw-48px)] flex flex-col gap-2.5">
+        <h2 class="text-[17px] font-bold text-white mb-1">Settings</h2>
+        <label class="text-[11px] text-[#6677aa] uppercase tracking-[0.8px]">UDP Listen Address</label>
         <input
           v-model="listenAddr"
-          class="modal-input"
+          class="bg-[#1a2030] border border-[#2a3a50] text-[#e0e6f0] px-3 py-2 rounded-md outline-none text-sm focus:border-[#4a90d9]"
           placeholder="0.0.0.0:8000"
           @keyup.enter="saveSettings"
           @keyup.escape="showSettings = false"
         />
-        <p class="modal-hint">Host:port the app listens on for Forza data. Default is 0.0.0.0:8000.</p>
-        <div v-if="settingsError" class="error">{{ settingsError }}</div>
-        <div class="modal-actions">
-          <button class="btn btn-save" @click="saveSettings">✓ Save</button>
-          <button class="btn btn-cancel" @click="showSettings = false">✗ Cancel</button>
+        <p class="text-xs text-[#6677aa] leading-snug">Host:port the app listens on for Forza data. Default is 0.0.0.0:8000.</p>
+        <div v-if="settingsError" class="text-[#ff6060] text-[13px] mt-2">{{ settingsError }}</div>
+        <div class="flex gap-2.5 mt-2">
+          <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#2a7ae2] text-white hover:bg-[#3a8af2] transition-colors" @click="saveSettings">✓ Save</button>
+          <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#333d4d] text-[#aabbcc] hover:bg-[#3d4d60] transition-colors" @click="showSettings = false">✗ Cancel</button>
         </div>
       </div>
     </div>

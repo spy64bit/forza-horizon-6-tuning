@@ -2,7 +2,6 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ListTunes, SaveTune, DeleteTune, ImportTunes } from '../../wailsjs/go/main/App'
 import { groups, allFields } from '../tuneSchema'
-import './TuningPanel.css'
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -148,102 +147,105 @@ onMounted(refresh)
 </script>
 
 <template>
-  <div v-if="show" class="modal-overlay" @click.self="close">
-    <div class="modal tune-modal">
-      <div class="tune-header">
-        <h2>Car Tuning</h2>
-        <button class="btn-icon" @click="close" title="Close">✕</button>
+  <div v-if="show" class="fixed inset-0 bg-[rgba(4,8,16,0.7)] flex items-center justify-center z-[100]" @click.self="close">
+    <div class="bg-[#131922] border border-[#2a3a50] rounded-xl overflow-hidden w-[1000px] max-w-[calc(100vw-48px)] max-h-[calc(100vh-48px)] flex flex-col">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between px-[22px] py-[18px] border-b border-[#2a3a50] flex-shrink-0">
+        <h2 class="text-[17px] font-bold text-white m-0">Car Tuning</h2>
+        <button class="bg-[#1e2a3a] border-0 text-[#e0e6f0] text-base w-8 h-8 rounded-md cursor-pointer flex items-center justify-center hover:bg-[#2a3a50] transition-colors" @click="close" title="Close">✕</button>
       </div>
 
-      <div class="tune-body">
-        <!-- Sidebar: saved tunes -->
-        <aside class="tune-list">
+      <div class="flex min-h-0 flex-1">
+        <!-- Sidebar -->
+        <aside class="w-[260px] flex-shrink-0 border-r border-[#2a3a50] p-4 flex flex-col gap-2.5 overflow-y-auto">
           <input
             v-model="search"
-            class="tune-search"
+            class="appearance-none block w-full h-[34px] px-2.5 bg-[#1a2030] border border-[#2a3a50] rounded-md text-[#e0e6f0] text-sm outline-none placeholder:text-[#445566] focus:border-[#4a90d9]"
             placeholder="Search cars…"
             @input="refresh"
           />
-          <div class="tune-list-head">
+          <div class="flex items-center justify-between text-xs text-[#8caac8] uppercase tracking-[0.6px]">
             <span>{{ filteredCount }} saved</span>
-            <div class="tune-list-actions">
-              <button class="btn btn-cancel sm" @click="triggerImport">⬆ Import</button>
-              <button class="btn btn-save sm" @click="newTune">＋ New</button>
+            <div class="flex gap-1.5">
+              <button class="px-2 py-1 border-0 rounded-md font-semibold cursor-pointer text-xs bg-[#333d4d] text-[#aabbcc] hover:bg-[#3d4d60] transition-colors" @click="triggerImport">⬆ Import</button>
+              <button class="px-2 py-1 border-0 rounded-md font-semibold cursor-pointer text-xs bg-[#2a7ae2] text-white hover:bg-[#3a8af2] transition-colors" @click="newTune">＋ New</button>
             </div>
           </div>
           <input ref="fileInput" type="file" accept="application/json,.json" hidden @change="onImportFile" />
-          <ul>
+          <ul class="list-none flex flex-col gap-1">
             <li
               v-for="t in tunes"
               :key="t.id"
-              :class="{ active: t.id === form.id }"
+              class="flex items-center justify-between gap-1.5 px-2.5 py-2 rounded-md cursor-pointer bg-[#1a2030] transition-colors hover:bg-[#20283a]"
+              :class="{ 'bg-[#1d3050] outline outline-1 outline-[#4a90d9]': t.id === form.id }"
               @click="loadTune(t)"
             >
-              <span class="tune-name">{{ t.name || '(unnamed)' }}</span>
-              <button class="btn-icon del" @click.stop="remove(t)" title="Delete">🗑</button>
+              <span class="overflow-hidden text-ellipsis whitespace-nowrap">{{ t.name || '(unnamed)' }}</span>
+              <button class="bg-transparent border-0 text-[#e0e6f0] text-[13px] w-[26px] h-[26px] rounded-md cursor-pointer flex items-center justify-center hover:bg-[#3d1515] transition-colors" @click.stop="remove(t)" title="Delete">🗑</button>
             </li>
-            <li v-if="!tunes.length" class="empty">No tunes yet</li>
+            <li v-if="!tunes.length" class="flex items-center justify-center px-2.5 py-2 text-[#8caac8] text-sm">No tunes yet</li>
           </ul>
         </aside>
 
         <!-- Editor -->
-        <section class="tune-editor">
-          <div class="tune-meta">
-            <label>Name *</label>
-            <input v-model="form.name" class="modal-input" placeholder="e.g. 2019 Porsche 911 GT3 RS" />
-            <label>Notes</label>
-            <input v-model="form.notes" class="modal-input" placeholder="Optional notes" />
+        <section class="flex-1 min-w-0 px-[22px] py-[18px] overflow-y-auto flex flex-col gap-4">
+          <div class="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-2">
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.6px] whitespace-nowrap">Name *</label>
+            <input v-model="form.name" class="bg-[#1a2030] border border-[#2a3a50] text-[#e0e6f0] px-3 py-2 rounded-md outline-none text-sm focus:border-[#4a90d9]" placeholder="e.g. 2019 Porsche 911 GT3 RS" />
+            <label class="text-xs text-[#8caac8] uppercase tracking-[0.6px] whitespace-nowrap">Notes</label>
+            <input v-model="form.notes" class="bg-[#1a2030] border border-[#2a3a50] text-[#e0e6f0] px-3 py-2 rounded-md outline-none text-sm focus:border-[#4a90d9]" placeholder="Optional notes" />
           </div>
 
-          <div class="tune-tabs-bar">
+          <div class="flex flex-wrap gap-1 pb-3 border-b border-[#2a3a50]">
             <button
               v-for="(g, i) in groups"
               :key="g.title"
-              class="tune-tab"
-              :class="{ active: activeTab === i }"
+              class="px-3 py-1.5 text-xs font-semibold bg-[#1a2030] border border-[#2a3a50] rounded-md cursor-pointer uppercase tracking-[0.5px] whitespace-nowrap transition-all hover:bg-[#20283a]"
+              :class="activeTab === i ? 'bg-[#1d3050] !border-[#4a90d9] text-[#e0e6f0]' : 'text-[#8caac8] hover:text-[#aabbcc]'"
               @click="activeTab = i"
             >{{ g.title }}</button>
           </div>
 
-          <div class="tune-tab-panel">
-            <div class="tune-fields">
-              <label v-for="field in groups[activeTab].fields" :key="field.key" class="tune-field">
-                <div class="tune-field-header">
-                  <span class="tune-field-label">{{ field.label }}</span>
-                  <span class="tune-slider-val" :class="{ empty: form[field.key] === '' || form[field.key] == null }">
+          <div class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-x-6 gap-y-[18px] pr-2">
+              <label v-for="field in groups[activeTab].fields" :key="field.key" class="flex flex-col gap-1.5 relative">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-sm text-[#aabbcc]">{{ field.label }}</span>
+                  <span class="text-base font-bold min-w-[48px] text-right whitespace-nowrap"
+                        :class="form[field.key] === '' || form[field.key] == null ? 'text-[#445566]' : 'text-[#f0f6ff]'">
                     {{ form[field.key] === '' || form[field.key] == null ? '—' : form[field.key] }}
                   </span>
                 </div>
                 <input
                   type="range"
+                  class="tune-range"
+                  :class="{ invalid: fieldErrors[field.key] }"
                   :min="field.min"
                   :max="field.max"
                   :step="field.step"
                   :value="form[field.key] === '' || form[field.key] == null ? field.min : form[field.key]"
                   @input="form[field.key] = $event.target.value"
-                  :class="{ invalid: fieldErrors[field.key] }"
                 />
-                <div class="tune-slider-range">
+                <div class="flex justify-between text-[13px] text-[#8caac8] mt-1.5">
                   <span>{{ field.min }}</span>
                   <span>{{ field.max }}</span>
                 </div>
-                <span v-if="fieldErrors[field.key]" class="tune-field-err">{{ fieldErrors[field.key] }}</span>
+                <span v-if="fieldErrors[field.key]" class="text-[10px] text-[#ff6060]">{{ fieldErrors[field.key] }}</span>
               </label>
             </div>
-          </div>
 
-          <div v-if="error" class="error">{{ error }}</div>
+          <div v-if="error" class="text-[#ff6060] text-[13px] mt-2">{{ error }}</div>
 
-          <div class="modal-actions tune-actions">
-            <button class="btn btn-save" @click="save">✓ {{ form.id ? 'Update' : 'Save' }}</button>
-            <button class="btn btn-cancel" @click="newTune">Clear</button>
+          <div class="sticky bottom-0 bg-[#131922] pt-2 flex gap-2.5">
+            <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#2a7ae2] text-white hover:bg-[#3a8af2] transition-colors" @click="save">✓ {{ form.id ? 'Update' : 'Save' }}</button>
+            <button class="px-4 py-1.5 border-0 rounded-md font-semibold cursor-pointer text-sm bg-[#333d4d] text-[#aabbcc] hover:bg-[#3d4d60] transition-colors" @click="newTune">Clear</button>
           </div>
         </section>
       </div>
     </div>
 
     <Transition name="tune-toast">
-      <div v-if="toast" class="tune-toast">{{ toast }}</div>
+      <div v-if="toast" class="fixed top-6 right-7 bg-[#1b4d2e] border border-[#2e7d4f] text-[#5dd98a] text-sm font-semibold px-[22px] py-2.5 rounded-lg pointer-events-none z-[9999] whitespace-nowrap shadow-[0_4px_18px_rgba(0,0,0,0.5)]">{{ toast }}</div>
     </Transition>
   </div>
 </template>

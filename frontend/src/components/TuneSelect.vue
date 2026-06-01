@@ -62,9 +62,9 @@ function onEnter() {
 </script>
 
 <template>
-  <div class="combobox">
+  <div class="relative flex-1">
     <input
-      class="combo-input"
+      class="bg-[#1a2030] border border-[#2a3a50] text-[#e0e6f0] px-2.5 py-1.5 rounded-md outline-none w-full text-[13px] cursor-text placeholder:text-[#445566] focus:border-[#4a90d9]"
       :value="search"
       placeholder="— No car tune —"
       autocomplete="off"
@@ -76,82 +76,21 @@ function onEnter() {
       @keydown.down.prevent="onDown"
       @keydown.up.prevent="onUp"
     />
-    <ul v-if="open" class="combo-dropdown">
+    <ul v-if="open" class="absolute top-[calc(100%+4px)] left-0 right-0 bg-[#1a2030] border border-[#2a3a50] rounded-md list-none m-0 py-1 max-h-[240px] overflow-y-auto z-20 shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
       <li
-        class="none"
-        :class="{ active: highlight === -1 && modelValue === 0 }"
+        class="px-3 py-1.5 cursor-pointer text-[13px] text-[#6677aa] whitespace-nowrap overflow-hidden text-ellipsis border-b border-[#2a3a50] mb-1 pb-2 hover:bg-[#253045] hover:text-white"
+        :class="{ 'bg-[#253045] text-white': highlight === -1 && modelValue === 0 }"
         @mousedown.prevent="select(0)"
       >— No car tune —</li>
       <li
         v-for="(t, i) in filtered"
         :key="t.id"
-        :class="{ active: highlight === i }"
+        class="px-3 py-1.5 cursor-pointer text-[13px] text-[#c0cce0] whitespace-nowrap overflow-hidden text-ellipsis hover:bg-[#253045] hover:text-white"
+        :class="{ 'bg-[#253045] text-white': highlight === i }"
         @mousedown.prevent="select(t.id)"
         @mousemove="highlight = i"
       >{{ t.name || '(unnamed)' }}</li>
-      <li v-if="filtered.length === 0" class="empty">No matches</li>
+      <li v-if="filtered.length === 0" class="px-3 py-1.5 text-[13px] text-[#445566] cursor-default">No matches</li>
     </ul>
   </div>
 </template>
-
-<style scoped>
-.combobox { position: relative; flex: 1; }
-
-.combo-input {
-  background: #1a2030;
-  border: 1px solid #2a3a50;
-  color: #e0e6f0;
-  padding: 6px 10px;
-  border-radius: 6px;
-  outline: none;
-  width: 100%;
-  font-size: 13px;
-  cursor: text;
-  text-align: left;
-}
-.combo-input::placeholder { color: #445566; }
-.combo-input:focus { border-color: #4a90d9; }
-.combo-input:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.combo-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: #1a2030;
-  border: 1px solid #2a3a50;
-  border-radius: 6px;
-  list-style: none;
-  margin: 0;
-  padding: 4px 0;
-  max-height: 240px;
-  overflow-y: auto;
-  z-index: 20;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-.combo-dropdown li {
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #c0cce0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-.combo-dropdown li:hover,
-.combo-dropdown li.active { background: #253045; color: #fff; }
-
-.combo-dropdown li.none {
-  color: #6677aa;
-  border-bottom: 1px solid #2a3a50;
-  margin-bottom: 4px;
-  padding-bottom: 8px;
-}
-
-.combo-dropdown li.empty {
-  color: #445566;
-  cursor: default;
-}
-.combo-dropdown li.empty:hover { background: transparent; color: #445566; }
-</style>

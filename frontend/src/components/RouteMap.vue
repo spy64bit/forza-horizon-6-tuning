@@ -145,36 +145,8 @@ defineExpose({ markDirty })
 </script>
 
 <template>
-  <div class="route-map">
-    <div class="route-map-label">Route</div>
-    <canvas ref="canvas" width="320" height="320"></canvas>
+  <div class="bg-[#131922] rounded-xl p-3.5 flex-shrink-0 flex flex-col gap-2 w-[348px]">
+    <div class="text-[11px] text-[#6677aa] uppercase tracking-[0.8px]">Route</div>
+    <canvas ref="canvas" width="320" height="320" class="block rounded-md bg-[#060c18] w-full h-auto"></canvas>
   </div>
 </template>
-
-<style scoped>
-.route-map {
-  background: #131922;
-  border-radius: 10px;
-  padding: 14px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 348px;
-}
-
-.route-map-label {
-  font-size: 11px;
-  color: #6677aa;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-canvas {
-  display: block;
-  border-radius: 6px;
-  background: #060c18;
-  width: 100%;
-  height: auto;
-}
-</style>
